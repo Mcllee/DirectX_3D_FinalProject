@@ -68,8 +68,8 @@ void CPlayer::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 void CPlayer::Move(const XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
 {
 	// 바닥 충돌체크
-	if (m_xmf3Position.y <= 0.0f) {
-		m_xmf3Position.y = 0.0f;
+	if (m_xmf3Position.y <= 2.0f) {
+		m_xmf3Position.y = 2.0f;
 	}
 
 	if (bUpdateVelocity)

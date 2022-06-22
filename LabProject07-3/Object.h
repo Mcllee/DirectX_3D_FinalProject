@@ -134,6 +134,8 @@ public:
 	CB_GAMEOBJECT_INFO				*m_pcbMappedGameObject = NULL;
 
 public:
+	bool is_Lamp = false;
+
 	void SetMesh(CMesh *pMesh);
 	void SetShader(CShader *pShader);
 	void SetAlbedoColor(UINT nIndex, XMFLOAT4 xmf4Color);
@@ -167,4 +169,26 @@ public:
 	void Rotate(XMFLOAT3 *pxmf3Axis, float fAngle);
 
 	void LoadGameObjectFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, char *pstrFileName);
+};
+
+class Street_Lamp 
+{
+public:
+	char							m_pstrName[64] = { '\0' };
+
+	XMFLOAT4X4						m_xmf4x4World;
+	CMesh* m_pMesh = NULL;
+	CShader* m_pShader = NULL;
+
+	UINT							m_nMaterials = 0;
+	CMaterial** m_ppMaterials = NULL;
+
+protected:
+	ID3D12Resource* m_pd3dcbGameObject = NULL;
+
+public:
+	CB_GAMEOBJECT_INFO* m_pcbMappedGameObject = NULL;
+
+public:
+	XMFLOAT3 Street_Lamp_Position;
 };

@@ -344,6 +344,11 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 	case WM_KEYUP:
 		switch (wParam)
 		{
+		case 'n':
+		case 'N':
+			if (m_pScene->day) { m_pScene->day = false; pfClearColor[0] = 0.01, pfClearColor[1] = 0.01, pfClearColor[2] = 0.01; }
+			else { m_pScene->day = true; pfClearColor[0] = 0.313f, pfClearColor[1] = 0.737f, pfClearColor[2] = 0.8745f; }
+			break;
 		case VK_ESCAPE:
 			::PostQuitMessage(0);
 			break;
@@ -549,7 +554,6 @@ void CGameFramework::FrameAdvance()
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	d3dRtvCPUDescriptorHandle.ptr += (m_nSwapChainBufferIndex * m_nRtvDescriptorIncrementSize);
 
-	float pfClearColor[4] = { 0.0525f, 0.0525f, 0.0525f, 1.0f };
 	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, pfClearColor/*Colors::Azure*/, 0, NULL);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();

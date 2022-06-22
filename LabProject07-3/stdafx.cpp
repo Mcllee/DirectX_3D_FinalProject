@@ -156,11 +156,14 @@ CGameObject **LoadGameObjectsFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCo
 			strcpy_s(pstrFilePath, 64, "Models/");
 			strcpy_s(pstrFilePath + 7, 64 - 7, pstrGameObjectName);
 			strcpy_s(pstrFilePath + 7 + nObjectNameLength, 64 - 7 - nObjectNameLength, ".bin");
-			CMesh *pMesh = new CMesh(pd3dDevice, pd3dCommandList, pstrFilePath);
-			
+			CMesh* pMesh = new CMesh(pd3dDevice, pd3dCommandList, pstrFilePath);
+
 			// 바운딩 박스 위치를 초기화
 			pGameObject->SetMesh(pMesh);
 			pGameObject->m_pMesh->m_xmBoundingBox.Center = pGameObject->GetPosition();
+
+			if(!strncmp(pstrFilePath, "Models/Lamp", 11))
+				pGameObject->is_Lamp = true;
 		}
 
 		ppGameObjects[i] = pGameObject;

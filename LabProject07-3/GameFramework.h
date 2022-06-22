@@ -40,6 +40,8 @@ public:
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
 private:
+	float						pfClearColor[4] = { 0.313f, 0.737f, 0.8745f, 1.0f };
+
 	HINSTANCE					m_hInstance;
 	HWND						m_hWnd;
 

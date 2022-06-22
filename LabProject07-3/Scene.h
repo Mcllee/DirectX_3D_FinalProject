@@ -28,6 +28,7 @@ struct LIGHTS
 {
 	LIGHT					m_pLights[MAX_LIGHTS];
 	XMFLOAT4				m_xmf4GlobalAmbient;
+	int						Last_index_number = 0;
 };
 
 struct MATERIAL
@@ -74,12 +75,14 @@ public:
 	CPlayer						*m_pPlayer = NULL;
 	CShader						**m_ppShaders = NULL;
 
+	bool						day = true;
+
+	LIGHTS						*m_pLights = NULL;
 protected:
 	ID3D12RootSignature			*m_pd3dGraphicsRootSignature = NULL;
 
 	int							m_nShaders = 0;
 
-	LIGHTS						*m_pLights = NULL;
 
 	ID3D12Resource				*m_pd3dcbLights = NULL;
 	LIGHTS						*m_pcbMappedLights = NULL;
