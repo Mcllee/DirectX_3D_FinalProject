@@ -76,6 +76,7 @@ public:
 	CShader						**m_ppShaders = NULL;
 
 	bool						day = true;
+	bool						start_game = false;
 
 	LIGHTS						*m_pLights = NULL;
 protected:

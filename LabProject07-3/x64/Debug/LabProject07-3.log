@@ -1,2 +1,7 @@
-﻿  Scene.cpp
+﻿  GameFramework.cpp
+C:\Users\User\source\repos\Test\LabProject07-3\GameFramework.cpp(346,70): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\User\source\repos\Test\LabProject07-3\GameFramework.cpp(346,94): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\User\source\repos\Test\LabProject07-3\GameFramework.cpp(346,118): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  Player.cpp
+  코드를 생성하고 있습니다...
   LabProject07-3.vcxproj -> C:\Users\User\source\repos\Test\x64\Debug\LabProject07-3.exe

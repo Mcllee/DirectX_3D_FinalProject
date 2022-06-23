@@ -246,20 +246,6 @@ void CGameFramework::CreateDepthStencilView()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_pd3dDevice->CreateCommittedResource(&d3dHeapProperties, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &d3dClearValue, __uuidof(ID3D12Resource), (void **)&m_pd3dDepthStencilBuffer);
-	/*
-	m_pd3dDevice->CreateCommittedResource(&d3dHeapProperties, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_COMMON, &d3dClearValue, __uuidof(ID3D12Resource), (void **)&m_pd3dDepthStencilBuffer);
-	m_pd3dDevice->CreateDepthStencilView(m_pd3dDepthStencilBuffer, NULL, d3dDsvCPUDescriptorHandle);
-
-	D3D12_RESOURCE_BARRIER d3dResourceBarrier;
-	::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
-	d3dResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	d3dResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	d3dResourceBarrier.Transition.pResource = m_pd3dDepthStencilBuffer;
-	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
-	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	m_pd3dCommandList->ResourceBarrier(1, &d3dResourceBarrier);
-	*/
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC d3dDepthStencilViewDesc;
 	::ZeroMemory(&d3dDepthStencilViewDesc, sizeof(D3D12_DEPTH_STENCIL_VIEW_DESC));
@@ -319,6 +305,8 @@ void CGameFramework::ChangeSwapChainState()
 
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+	if (!m_pScene->start_game) return;
+
 	switch (nMessageID)
 	{
 	case WM_LBUTTONDOWN:
@@ -344,23 +332,21 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 	case WM_KEYUP:
 		switch (wParam)
 		{
-		case 'n':
+		case 'Q':
+			::PostQuitMessage(0);
+			break;
+		case 'S':
+			if (m_pScene->start_game) m_pScene->start_game = false;
+			else m_pScene->start_game = true;
+			break;
+		case 'R':
+			
+			break;
 		case 'N':
 			if (m_pScene->day) { m_pScene->day = false; pfClearColor[0] = 0.01, pfClearColor[1] = 0.01, pfClearColor[2] = 0.01; }
 			else { m_pScene->day = true; pfClearColor[0] = 0.313f, pfClearColor[1] = 0.737f, pfClearColor[2] = 0.8745f; }
 			break;
-		case VK_ESCAPE:
-			::PostQuitMessage(0);
-			break;
 		case VK_RETURN:
-			break;
-		case VK_F1:
-		case VK_F2:
-		case VK_F3:
-			m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
-			break;
-		case VK_F9:
-			ChangeSwapChainState();
 			break;
 		default:
 			break;
@@ -493,9 +479,8 @@ void CGameFramework::ProcessInput()
 			else
 				m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
 		}
-		if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+		if (dwDirection) m_pPlayer->Move(dwDirection, 0.1f, true);
 	}
-
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
 }
 
@@ -518,7 +503,6 @@ void CGameFramework::WaitForGpuComplete()
 void CGameFramework::MoveToNextFrame()
 {
 	m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
-	//m_nSwapChainBufferIndex = (m_nSwapChainBufferIndex + 1) % m_nSwapChainBuffers;
 
 	UINT64 nFenceValue = ++m_nFenceValues[m_nSwapChainBufferIndex];
 	HRESULT hResult = m_pd3dCommandQueue->Signal(m_pd3dFence, nFenceValue);
@@ -566,7 +550,7 @@ void CGameFramework::FrameAdvance()
 #ifdef _WITH_PLAYER_TOP
 	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 #endif
-	if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
+	// if (m_pPlayer && m_pScene->start_game) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
 
 	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
